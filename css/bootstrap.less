@@ -1,0 +1,309 @@
+/**
+ * @author Fedor Pudeyan
+ */
+              
+/* CUSTOM MIXINS */
+.pie {
+	behavior:url(./../js/PIE.htc);
+}
+.fontMetrics(@fontSize: 12px, @lineHeight: 14px) {
+	font-size: @fontSize;
+	line-height: @lineHeight;
+}
+.absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {
+	position: absolute;
+	top: @top;
+	right: @right;
+	bottom: @bottom;
+	left: @left;
+}
+.absoluteStretch(@amount: 0) {
+	.absolute(@amount, @amount, @amount, @amount);
+}
+.fixed(@top: auto, @right: auto, @bottom: auto, @left: auto) {
+	position: fixed;
+	top: @top;
+	right: @right;
+	bottom: @bottom;
+	left: @left;
+}
+.fixedStretch(@amount: 0) {
+	.fixed(@amount, @amount, @amount, @amount);
+}
+.adaptiveImage(@height) {
+	position: relative;
+	overflow: hidden;
+	height: @height;
+	
+	span {
+		.absolute;
+		left: 50%;
+		
+		img {
+			position: relative;
+			left: -50%;
+		}
+	}
+}
+.verticalCenterContainer {
+		&:after {
+		content: '';
+	    display: inline-block;
+	    vertical-align: middle;
+	    height:100%;
+	}
+}
+// Fonts
+
+.font-face-b(@fontname, @fontfile) {
+
+font-family: "@{fontname}";
+src: url("@{fontfile}-webfont.eot");
+src: url("@{fontfile}-webfont.eot?#iefix") format("embedded-opentype"),
+     url("@{fontfile}-webfont.woff") format("woff"),
+     url("@{fontfile}-webfont.ttf") format("truetype"),
+     url("@{fontfile}-webfont.svg#@{fontname}") format("svg");
+font-weight: bold;
+font-style: normal;
+}
+.font-face-i(@fontname, @fontfile) {
+
+font-family: "@{fontname}";
+src: url("@{fontfile}-webfont.eot");
+src: url("@{fontfile}-webfont.eot?#iefix") format("embedded-opentype"),
+     url("@{fontfile}-webfont.woff") format("woff"),
+     url("@{fontfile}-webfont.ttf") format("truetype"),
+     url("@{fontfile}-webfont.svg#@{fontname}") format("svg");
+font-weight: normal;
+font-style: italic;
+}
+.font-face-bi(@fontname, @fontfile) {
+
+font-family: "@{fontname}";
+src: url("@{fontfile}-webfont.eot");
+src: url("@{fontfile}-webfont.eot?#iefix") format("embedded-opentype"),
+     url("@{fontfile}-webfont.woff") format("woff"),
+     url("@{fontfile}-webfont.ttf") format("truetype"),
+     url("@{fontfile}-webfont.svg#@{fontname}") format("svg");
+font-weight: bold;
+font-style: italic;
+}
+
+// Arrows © Fedor Pudeyan
+#arrow {
+	.up(@width, @height, @color) {
+		#reset > .reset-box-model;
+		width: ~`parseInt("@{width}") % 2 + 'px'`;
+		height: 0;
+		border: 0 solid transparent;
+		border-bottom: @height solid @color;
+		border-left-width: ~`Math.floor(parseInt("@{width}") / 2) + 'px'`;
+		border-right-width: ~`Math.floor(parseInt("@{width}") / 2) + 'px'`;
+	}
+	.down(@width, @height, @color) {
+		#reset > .reset-box-model;
+		width: ~`parseInt("@{width}") % 2 + 'px'`;
+		height: 0;
+		border: 0 solid transparent;
+		border-top: @height solid @color;
+		border-left-width: ~`Math.floor(parseInt("@{width}") / 2) + 'px'`;
+		border-right-width: ~`Math.floor(parseInt("@{width}") / 2) + 'px'`;
+	}
+	.left(@width, @height, @color) {
+		#reset > .reset-box-model;
+		width: 0;
+		height: ~`parseInt("@{height}") % 2 + 'px'`;
+		border: 0 solid transparent;
+		border-right: @width solid @color;
+		border-top-width: ~`Math.floor(parseInt("@{height}") / 2) + 'px'`;
+		border-bottom-width: ~`Math.floor(parseInt("@{height}") / 2) + 'px'`;
+	}
+	.right(@width, @height, @color) {
+		#reset > .reset-box-model;
+		width: 0;
+		height: ~`parseInt("@{height}") % 2 + 'px'`;
+		border: 0 solid transparent;
+		border-left: @width solid @color;
+		border-top-width: ~`Math.floor(parseInt("@{height}") / 2) + 'px'`;
+		border-bottom-width: ~`Math.floor(parseInt("@{height}") / 2) + 'px'`;
+	}
+}
+// Image with Retina Display Support © Fedor Pudeyan
+.sprite(@path, @width: auto, @height: auto) {
+	content: '';
+	.hideText;
+	.size(@width, @height);
+    background-image: url(@path);
+    background-repeat: no-repeat;
+
+/*
+   @retina_path: ~`@{path}.replace(/(.*[^\/]+)\.(\w+)/g, "$1@2x.$2")`;
+
+	@media
+	only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (   min--moz-device-pixel-ratio: 2),
+	only screen and (     -o-min-device-pixel-ratio: 2/1),
+	only screen and (        min-device-pixel-ratio: 2),
+	only screen and (                min-resolution: 192dpi),
+	only screen and (                min-resolution: 2dppx) {
+        background-image: url(@retina_path);
+        -webkit-background-size: 100% auto;
+    }
+*/
+}
+
+.clearFix(@side: both) {
+	&:after {
+		content: '';
+		display: block;
+		clear: @side;
+	}
+}
+.hideText {
+	display: block;
+	overflow: hidden;
+	text-indent: -10000px;
+	white-space: nowrap;
+}
+.backgroundColor(@color: black, @opacity: 0.5) {
+	@transientColor: fade(@color, percentage(@opacity));
+ 	background-color: @transientColor;
+
+    :root & {filter: none !important} /* turn off filters in IE9+ */
+
+    /* using filter for IE5.5-8 */
+  	@alpha: round(alpha(@transientColor)*255);
+	@transientColorARGBHex: ~`"#" + (@{alpha}).toString(16) + "@{color}".slice(1)`;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@transientColorARGBHex, @transientColorARGBHex));
+    
+	/* For example:    .backgroundColor(white, 0.85);   */
+}
+.backgroundCover(@url) {
+	background-image: url(@url);
+	background-size: cover;
+	background-repeat: no-repeat;
+/* 	-ms-behavior: url(./../js/backgroundsize.min.htc); */
+/* 	-pie-background: url(@url) no-repeat 50% 0 / cover; */
+/*     filter: e(%("progid:DXImageTransform.Microsoft.AlphaImageLoader(src='%s', sizingMethod='scale')",@url)); */
+}
+.backgroundContain(@url) {
+	background-image: url(@url);
+	background-size: contain;
+	background-repeat: no-repeat;
+/* 	-ms-behavior: url(./../js/backgroundsize.min.htc); */
+/* 	-pie-background: red url(@url) no-repeat 50% 50% / contain; */
+/*     filter: e(%("progid:DXImageTransform.Microsoft.AlphaImageLoader(src='%s', sizingMethod='scale')",@url)); */
+}
+.gradientVertical(@color1: white, @color2: black) {
+
+	.background-image(linear-gradient(top, @color1 0%, @color2 100%));
+
+	:root & {filter: none !important} /* turn off filters in IE9+ */
+	/* using filter for IE5.5-8 */
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)", argb(@color1), argb(@color2)));
+}
+
+/* Sizing */
+.maxSize(@square){
+	max-width: @square;
+	max-height: @square;
+}
+.maxSize(@width, @height){
+	max-width: @width;
+	max-height: @height;
+}
+.widthRange(@min, @max) {
+	min-width: @min;
+	max-width: @max;
+}
+.heightRange(@min, @max) {
+	min-height: @min;
+	max-height: @max;
+}
+
+/* COMMON MIXINS */
+// Based on Eric Meyers' reset 2.0 - http://meyerweb.com/eric/tools/css/reset/index.html 
+// & the Compass Reset utility - http://compass-style.org/reference/compass/reset/utilities/
+#reset {
+  .global-reset {
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed, 
+    figure, figcaption, footer, header, hgroup, 
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+      #reset > .reset-box-model;
+      #reset > .reset-font; 
+    }
+    body {
+      #reset > .reset-body; 
+    }
+    ol, ul {
+      #reset > .reset-list-style; 
+    }
+    table {
+      #reset > .reset-table; 
+    }
+    caption, th, td {
+      #reset > .reset-table-cell; 
+    }
+    q, blockquote {
+      #reset > .reset-quotation; 
+    }
+    a img {
+      #reset > .reset-image-anchor-border; 
+    }
+    #reset > .reset-html5;
+  }
+  .reset-box-model {
+    margin: 0;
+    padding: 0;
+    border: 0; 
+  }
+  .reset-font {
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+  .reset-focus {
+    outline: 0;
+  }
+  .reset-body {
+    line-height: 1;
+  }
+  .reset-list-style {
+    list-style: none;
+  }
+  .reset-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  .reset-table-cell {
+    text-align: left;
+    font-weight: normal;
+    vertical-align: middle;
+  }
+  .reset-quotation {
+    quotes: none;
+    &:before, &:after {
+      content: ""; 
+      content: none;
+    }
+  }
+  .reset-image-anchor-border {
+    border: none;
+  }
+  .reset-html5 {
+    article, aside, details, figcaption, figure, 
+    footer, header, hgroup, menu, nav, section {
+      display: block;
+    }
+  }
+}
